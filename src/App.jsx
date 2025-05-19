@@ -3,12 +3,63 @@ import './App.css'
 
 function App() {
   const [activo, setActivo] = useState(null);
+  const [index, setIndex] = useState(1);
+  const [indexInicio, setIndexInicio] = useState(0);
+  const [fade, setFade] = useState(false);
+  const isFirstRender = useRef(true);
 
   const sectionInicioRef = useRef(null);
   const sectionInformacionRef = useRef(null);
   const sectionExperienciaRef = useRef(null);
   const sectionProyectosRef = useRef(null);
   const sectionContactoRef = useRef(null);
+  const imagenes = [
+    '',
+    'fondo1.jpg',
+    'fondo2.jpg',
+    'fondo3.jpg',
+    'fondo4.jpg',
+    'fondo5.jpg',
+    'fondo6.jpg',
+    'fondo7.jpg',
+    'fondo8.jpg',
+  ];
+
+  const cambiarFondo = () => {
+    setFade(true);
+    setTimeout(() => {
+      setIndex((prevIndex) => (prevIndex + 1) % imagenes.length) ;
+      setFade(false);
+    }, 300);
+  };
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    const timer = setTimeout(() => {
+      setIndexInicio(index);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [activo]);
+
+  const estiloFondoInicio = {
+    backgroundImage: `url(/img/${imagenes[indexInicio]})`,
+    backgroundSize: 'cover',
+  }
+
+  const estiloFondo = {
+    backgroundImage: `url(/img/${imagenes[index]})`,
+    backgroundSize: 'cover',
+  }
+  const estiloFondoTarjeta = {
+    backgroundImage: `url(/img/${imagenes[index]})`,
+    backgroundSize: 'cover',
+    transition: 'opacity 0.3s ease',
+    opacity: fade ? 0 : 1,
+  }
+
   const handleScrollToSection = (ref, index) => {
     setActivo(index);
     if (ref) {
@@ -75,7 +126,7 @@ function App() {
         </div>
       </header>
 
-      <div className='snap-section wrapper-informacion' ref={sectionInicioRef}>
+      <div style={ estiloFondoInicio } className='snap-section wrapper-informacion' ref={sectionInicioRef}>
         <div className="wrapper-letras-informacion">
           <h2 className="nombre-informacion">Heiner Andrés Solano Arguedas</h2>
           <p className="color-blanco titulo-principal">Ingeniero en Sistemas</p>
@@ -86,7 +137,7 @@ function App() {
           </div>
         </div>
         <div className="wrapper-tarjeta-informacion">
-          <div className="background-tarjeta-contacto">
+          <div style={ estiloFondoTarjeta } onClick={ cambiarFondo }className="background-tarjeta-contacto">
               <div className="capa-borrosa">
                 <div className="wrapper-izquierda-tarjeta-contacto">
                   <div className="wrapper-img-tarjeta-contacto">
@@ -122,13 +173,17 @@ function App() {
                 </div>
               </div>
             </div>
+            <div className="wrapper-click-me">
+              <img src="/img/click.png" />
+              <p className="color-blanco">Click aquí</p>
+            </div>
         </div>
       </div>
 
 
-      <div className="snap-section wrapper-perfil" ref={sectionInformacionRef}>   
+      <div  style={ estiloFondo }  className="snap-section wrapper-perfil" ref={sectionInformacionRef}>   
         <div className="title-wrapper">
-          <p>Perfil</p>
+          <p>Información</p>
         </div>
         <div className="description-main-wrapper">
           <div className="perfil-cards">
@@ -262,7 +317,7 @@ function App() {
           </div>
         </div>
       </div>
-      <div className="snap-section wrapper-experiencia" ref={sectionExperienciaRef}>
+      <div  style={ estiloFondo } className="snap-section wrapper-experiencia" ref={sectionExperienciaRef}>
         <div className="wrapper-title-experiencia">
           <p>Experiencia</p>
         </div>
@@ -367,7 +422,7 @@ function App() {
         </div>
         </div>
       </div>
-      <div className="snap-section wrapper-proyectos" ref={sectionProyectosRef}>
+      <div  style={ estiloFondo }  className="snap-section wrapper-proyectos" ref={sectionProyectosRef}>
         <div className="wrapper-title-projects">
           <p>Proyectos</p>
         </div>
@@ -434,7 +489,7 @@ function App() {
           </div>
         </div>
       </div>
-      <div className="snap-section wrapper-contacto" ref={sectionContactoRef}>
+      <div  style={ estiloFondo } className="snap-section wrapper-contacto" ref={sectionContactoRef}>
         <div className="wrapper-title-contacto">
           <p>Trabajemos Juntos</p>
         </div>
@@ -445,7 +500,7 @@ function App() {
             </div>
           </div>
           <div className="wrapper-tarjeta-contacto">
-            <div className="background-tarjeta-contacto">
+            <div onClick= {() => handleScrollToSection(sectionInicioRef, 0)} style={ estiloFondo }   className="background-tarjeta-contacto">
               <div className="capa-borrosa">
                 <div className="wrapper-izquierda-tarjeta-contacto">
                   <div className="wrapper-img-tarjeta-contacto">
